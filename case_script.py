@@ -8,6 +8,7 @@ def launchPano():
     d.press('home')
     time.sleep(1)
     d.swipe(550, 1500, 450, 800, steps=15)
+    time.sleep(3)
 
 def exitPano():
     os.popen("adb shell am force-stop com.letv.android.quicksearchbox")
@@ -30,6 +31,14 @@ def backspaceOnInputBox():
 
 def launchHoldHomekey():
     longPressHome()
+
+def longPressHome():
+    os.popen('adb shell sendevent /dev/input/event13 1 172 1')
+    os.popen('adb shell sendevent /dev/input/event13 0 0 0')
+    time.sleep(1)
+    os.popen('adb shell sendevent /dev/input/event13 1 172 0')
+    os.popen('adb shell sendevent /dev/input/event13 0 0 0')
+    time.sleep(3)
 
 def actHoldHomeKey():
     d.press('home')
@@ -66,12 +75,6 @@ def backFromEditsWidget():
     d(text = u'编辑我的订阅').click()
     d.press('back')
 
-# def backFromAllWidget():
-#     while d(text = u'展开全部订阅').wait.gone(timeout = 3000):
-#         d.swipe(700, 1700, 700, 1000, steps = 30)
-#     d(text = u'展开全部订阅').click()
-#     d.press('back')
-
 def unlockScreen():
     d.press('power')
     time.sleep(1)
@@ -84,6 +87,7 @@ def launchFromSysSettings():
     while d(text = u'万象搜索').wait.gone(timeout = 3000):
         d.swipe(600, 1700, 600, 500)
     d(text = u'万象搜索').click()
+    time.sleep(3)
 
 def actFromSysSettings():
     launchPano()
@@ -102,24 +106,45 @@ def launchFromWallet():
     d(resourceId = 'com.letv.walletbiz:id/icon', instance = 1).click()
     d(text = u'电影票', resourceId = 'com.letv.walletbiz:id/service_name').click()
     d(resourceId = 'com.letv.walletbiz:id/action_search').click()
+    time.sleep(3)
 
+def exitViaCancel():
+    launchSlideUp()
+    d(text = u'取消').click()
 
+def exitViaMenu():
+    launchSlideUp()
+    d.press('menu')
+    d.swipe(550, 900, 1000, 900, steps = 10)
+    d.press('back')
 
+def exitViaBack():
+    launchSlideUp()
+    d.press('back')
 
+def exitViaDoubleBack():
+    launchSlideUp()
+    d.press('back')
+    d.press('back')
 
+def actFromSlideUp():
+    launchPano()
+    d.press('home')
+    launchPano()
 
+def actFromHoldHome():
+    launchPano()
+    d.press('home')
+    longPressHome()
 
+def actFromSysSettings():
+    launchPano()
+    d.press('home')
+    launchFromSysSettings()
 
+def actFromWallet()
+    launchPano()
+    d.press('home')
+    launchFromWallet()
 
-
-
-
-
-
-def longPressHome():
-    os.popen('adb shell sendevent /dev/input/event13 1 172 1')
-    os.popen('adb shell sendevent /dev/input/event13 0 0 0')
-    time.sleep(1)
-    os.popen('adb shell sendevent /dev/input/event13 1 172 0')
-    os.popen('adb shell sendevent /dev/input/event13 0 0 0')
 

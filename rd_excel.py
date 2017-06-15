@@ -43,31 +43,53 @@ def main_test():
         collection.remove({"app_id":app_id,"imei":imei})
         try:
             exec('case_script.' + k_v['FuncName'] + '()') # Run test case
-            time.sleep(6)
+            time.sleep(7)
         except:
             pass
         find_par = eval(k_v['FindPar'])
         find_result = collection.find(find_par)
         test_result = 'FAIL'
         f_name_o = k_v['CaseNo'] + '_' + k_v['FuncName'] + '.txt'
-        f = open(f_name_o, 'w')
+        f = open(f_name_o, 'a')
+        fail_reason = ''
+        find_result_list = []
         for data in find_result:
             data['_id'] = str(data['_id'])
             json_data = json.dumps(data, indent = 4)
             f.write(json_data)
-            for sub_dic in data['props']:
-                if k_v['EventPropsK'] in sub_dic.values():
-                    props_index = data['props'].index(sub_dic)
-                    if data['props'][props_index]["value"] == k_v['EventPropsV']:
+            find_result_list.append(data)
+        f.close()
+        props = []
+        for prop in k_v['EventProps'].split(','):
+            if '=' in prop:
+                prop = dict([prop.split('=')])
+            props.append(prop)
+        print props
+        data_props_list = []
+        for f_data in find_result_list:
+            for sub_dic in f_data['props']:
+                data_props_list.append(sub_dic)
+        print data_props_list
+        for p in props:
+            for pp in data_props_list:
+                if type(p) != dict and p in pp.values():
+                    p_index = data_props_list.index(pp)
+                    if data_props_list[p_index]["value"] != "":
                         test_result = 'PASS'
-                    break
-
+                elif type(p) == dict and p.keys()[0] in pp.values():
+                    p_index = data_props_list.index(pp)
+                    if data_props_list[p_index]["value"] == p.values()[0]:
+                        print "hahahaha"
+                        test_result = 'PASS'
+            else:
+                fail_reason = '\n\n**** ' + str(p) + ' has error' + ' ****'
+                test_result = 'FAIL'
+                break
+        f = open(f_name_o, 'a')
+        f.write(fail_reason)
         f.close()
         os.rename(f_name_o, f_name_o[0:-4] + '_' + test_result + '.txt')
         print test_result
 
         
-
-
 main_test()
-# case_script.launchSlideUp()

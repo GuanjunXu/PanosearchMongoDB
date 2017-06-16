@@ -4,10 +4,13 @@ from uiautomator import device as d
 import time
 import os
 
+def swipeUp():
+    d.swipe(550, 1500, 450, 800, steps=15)
+
 def launchPano():
     d.press('home')
     time.sleep(1)
-    d.swipe(550, 1500, 450, 800, steps=15)
+    swipeUp()
     time.sleep(3)
 
 def exitPano():
@@ -20,13 +23,10 @@ def actSlideUp():
     launchPano()
 
 def slideDownRefresh():
-    d.swipe(700, 700, 700, 1500,steps=10)
+    d.swipe(550, 700, 550, 1500,steps=10)
 
 def backspaceOnInputBox():
-    searchbox = 'com.letv.android.quicksearchbox:id/search_src_text'
-    d(resourceId = searchbox).click()
-    d(resourceId = searchbox).set_text('a') # Input a
-    time.sleep(1)
+    inputText('a')
     d.press('delete') # Delete a
 
 def launchHoldHomekey():
@@ -48,11 +48,14 @@ def actHoldHomeKey():
     #     d.press('back')
     # longPressHome()
 
-def clearInputBox():
+def inputText(ttt):
     searchbox = 'com.letv.android.quicksearchbox:id/search_src_text'
     d(resourceId = searchbox).click()
-    d(resourceId = searchbox).set_text('a') # Input a
+    d(resourceId = searchbox).set_text(ttt) # Input a
     time.sleep(1)
+
+def clearInputBox():
+    inputText('a')
     d(resourceId = 'com.letv.android.quicksearchbox:id/delete').click()
 
 def backFromThirdApp():
@@ -63,10 +66,7 @@ def backFromThirdApp():
     d.press('back')
 
 def backFromResult():
-    searchbox = 'com.letv.android.quicksearchbox:id/search_src_text'
-    d(resourceId = searchbox).click()
-    d(resourceId = searchbox).set_text('a') # Input a
-    time.sleep(1)
+    inputText('a')
     d.press('back')
 
 def backFromEditsWidget():
@@ -142,9 +142,132 @@ def actFromSysSettings():
     d.press('home')
     launchFromSysSettings()
 
-def actFromWallet()
+def actFromWallet():
     launchPano()
     d.press('home')
     launchFromWallet()
+
+def actEndViaHome():
+    launchPano()
+    d.press('home')
+
+def actEndViaBack():
+    launchPano()
+    d.press('back')
+
+def actEndViaThrdParty():
+    launchPano()
+    p = 0
+    while d(text = u'短视频').wait.gone():
+        p += 1
+        swipeUp()
+        if p > 4:
+            break
+    d(text=u'短视频').down(resourceId='com.letv.android.quicksearchbox:id/template_item').click()
+    time.sleep(5)
+
+def actEndViaCancel():
+    launchPano()
+    d(text = u'取消').click()
+
+def invokeLaunchSlideUp():
+    launchPano()
+
+def invokeLaunchHoldHomekey():
+    launchHoldHomekey()
+
+def invokeLaunchSysSettings():
+    launchFromSysSettings()
+
+def invokeLaunchThrdParty():
+    launchFromWallet()
+
+def exposeLaunchSlideUp():
+    launchPano()
+
+def exposeRefreshSlideDown():
+    launchPano()
+    slideDownRefresh()
+    
+def exposeDelSearchBar():
+    launchPano()
+    backspaceOnInputBox()
+
+def exposeLaunchHoldHome():
+    launchHoldHomekey()
+
+def exposeClearSearchBar():
+    launchPano()
+    clearInputBox()
+
+def exposeWallet():
+    launchFromWallet()
+
+def exposeBackFromResult():
+    inputText('a')
+    d.pres('back')
+
+def exposeBackFromEditsWidget():
+    pass
+
+def exposeBackFromWidgetList():
+    pass
+
+def exposeBackFromScreenLock():
+    launchPano()
+    d.press('power')
+    time.sleep(3)
+    d.press('power')
+    swipeUp()
+
+def clickSearchHomePage():
+    launchPano()
+    inputText('')
+
+def clickSearchResult():
+    launchPano()
+    inputText('a')
+    time.sleep(1)
+    inputText('z')
+
+def clickCancelHomePage():
+    launchPano()
+    d(text = u'取消').click()
+
+def clickCancelResult():
+    launchPano()
+    inputText('a')
+    d(text = u'取消').click()
+
+def clickClearButton():
+    clearInputBox()
+
+def exposeSERPHistory():
+    launchPano()
+    inputText('a')
+    d(resourceId = 'com.letv.android.quicksearchbox:id/group_title').click()
+    exitPano()
+    launchPano()
+    d(text = u'搜索历史').down(text = 'a').click()
+
+def exposeSERPHot():
+    launchPano()
+    p = 0
+    while d(text = u'大家都在搜').wait.gone():
+        p += 1
+        swipeUp()
+        if p > 10:
+            break
+    d(text = u'大家都在搜').down(resourceId = 'com.letv.android.quicksearchbox:id/content').click()
+
+def exposeSERPInput():
+    launchPano()
+    inputText('a')
+
+def exposeSERPHome():
+    launchPano()
+    inputText('a')
+    time.sleep(3)
+    launchPano()
 
 

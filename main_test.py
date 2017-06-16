@@ -39,7 +39,7 @@ def mainTest():
             collection = db.app
         else:
             collection = db.event
-        os.popen("adb shell am force-stop com.letv.android.quicksearchbox") # Exit Pano
+        case_script.exitPano()
         collection.remove({"app_id":app_id,"imei":imei}) # Clear history
         try:
             exec('case_script.' + k_v['FuncName'] + '()') # Run test case
@@ -48,7 +48,7 @@ def mainTest():
             pass
         find_par = eval(k_v['FindPar'])
         find_result = collection.find(find_par)
-        test_result = ''
+        test_result = 'NotRun'
         f_name_o = k_v['CaseNo'] + '_' + k_v['FuncName'] + '.txt'
         f = open(f_name_o, 'a')
         fail_reason = ''

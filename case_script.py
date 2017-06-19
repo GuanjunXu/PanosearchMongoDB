@@ -116,6 +116,7 @@ def exitViaMenu():
     launchSlideUp()
     d.press('menu')
     d.swipe(550, 900, 1000, 900, steps = 10)
+    time.sleep(2)
     d.press('back')
 
 def exitViaBack():
@@ -270,4 +271,142 @@ def exposeSERPHome():
     time.sleep(3)
     launchPano()
 
+def clickMoreButton(card_name = None):
+    if card_name != None:
+        d(text = u'%s'%card_name).right(resourceId = 'com.letv.android.quicksearchbox:id/group_search').click()
+    else:
+        d(resourceId = 'com.letv.android.quicksearchbox:id/group_search').click()
 
+def clickMoreSERP():
+    launchPano()
+    inputText('a')
+    clickMoreButton()
+    time.sleep(2)
+
+def clickEpisode():
+    launchPano()
+    inputText('a')
+    d(resourceId = 'com.letv.android.quicksearchbox:id/txt_episode').click()
+    time.sleep(2)
+
+def clickMoreEpisode():
+    launchPano()
+    inputText('a')
+    d(text = u'更多', resourceId = 'com.letv.android.quicksearchbox:id/txt_episode').click()
+    time.sleep(2)
+
+def clickShowOnWeb():
+    launchPano()
+    inputText('a')
+    p = 0
+    while d(text = u'搜索网页').wait.gone():
+        p += 1
+        swipeUp()
+        if p > 10:
+            break
+    d(text = u'搜索网页').click()
+    time.sleep(2)
+
+def clickHotOpus():
+    pass
+
+def exposeNoResult():
+    launchPano()
+    inputText('pppppppppppppppppppppppppp')
+    time.sleep(2)
+
+def clickFollow():
+    pass
+
+def clickFollowed():
+    pass
+
+def clickSendSMS():
+    launchPano()
+    inputText('gao')
+    d(resouceId = 'com.letv.android.quicksearchbox:id/message_image').click()
+    time.sleep(2)
+
+def clickCallOut():
+    launchPano()
+    inputText('gao')
+    d(resouceId = 'com.letv.android.quicksearchbox:id/call_image').click()
+    time.sleep(2)
+
+def clickCallTheCar():
+    launchPano()
+    inputText('soho')
+    d(text = u'去叫车').click()
+    time.sleep(2)
+
+def clickInstallApp():
+    launchPano()
+    inputText('shipin')
+    p = 0
+    while d(text = u'安装').wait.gone():
+        p += 1
+        swipeUp()
+        if p > 10:
+            break
+    d(text = u'安装').click()
+    time.sleep(2)
+    d(text = u'暂停').click()
+
+def clickUpgradeApp():
+    # launchPano()
+    # inputText('shipin')
+    # p = 0
+    # while d(text = u'更新').wait.gone():
+    #     p += 1
+    #     swipeUp()
+    #     if p > 10:
+    #         break
+    # d(text = u'更新').click()
+    pass
+
+def clickOpenApp():
+    launchPano()
+    inputText('shipin')
+    p = 0
+    while d(text = u'安装').wait.gone():
+        p += 1
+        swipeUp()
+        if p > 10:
+            break
+    d(text = u'安装').click()
+    time.sleep(120)
+    d(text = u'打开').click()
+
+def clickPlayNow():
+    launchPano()
+    inputText('shipin')
+    p = 0
+    while d(text = u'立即播放').wait.gone():
+        p += 1
+        swipeUp()
+        if p > 10:
+            break
+    d(text = u'立即播放').click()
+    time.sleep(2)
+
+def clickContactListSMS():
+    clickSendSMS()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/number').click()
+
+def expseContactListSMS():
+    clickContactListSMS()
+
+def clickCancelContactList():
+    clickSendSMS()
+    d(text = u'取消').click()
+
+def clickContactListCall():
+    clickCallOut()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/number').click()
+
+def expseContactListCall():
+    clickContactListCall()
+
+def clickCancelContactListCall():
+    clickCallOut()
+    d(text = u'取消').click()

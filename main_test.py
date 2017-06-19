@@ -95,6 +95,6 @@ def mainTest():
         f.close()
         os.rename(f_name_o, f_name_o[0:-4] + '_' + test_result + '.txt')
         print test_result
-
+        case_script.exitViaMenu()
         
 mainTest()

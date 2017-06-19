@@ -410,3 +410,15 @@ def expseContactListCall():
 def clickCancelContactListCall():
     clickCallOut()
     d(text = u'取消').click()
+
+def clickNextPage():
+    launchPano()
+    nextPage = 'com.letv.android.quicksearchbox:id/flush'
+    p = 0
+    while d(resourceId = nextPage).wait.gone():
+        p += 1
+        swipeUp()
+        if p > 10:
+            break
+    d(resourceId = nextPage).click()
+    time.sleep(2)

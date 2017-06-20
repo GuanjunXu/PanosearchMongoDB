@@ -422,3 +422,34 @@ def clickNextPage():
             break
     d(resourceId = nextPage).click()
     time.sleep(2)
+
+def exposePanoSettingsFromSysSettings():
+    actFromSysSettings()
+
+def exposePanoSettingsFromPersonalSettings():
+    actFromSysSettings()
+    d(text = u'首页个性化设置').click()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_switch').click()
+    d.press('back')
+
+def exposePanoSettingsFromFeedback():
+    actFromSysSettings()
+    d(text = u'用户反馈').click()
+    d.press('back')
+
+def exposePanoSettingsFromCardEdit():
+    pass
+
+def exposePanoSettingsFromUnlockScreen():
+    actFromSysSettings()
+    d.press('power')
+    time.sleep(2)
+    d.press('power')
+    swipeUp()
+
+def exposePanoSettingsFromMenulist():
+    actFromSysSettings()
+    d.press('menu')
+    time.sleep(1)
+    d.press('back')
+

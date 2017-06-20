@@ -60,7 +60,7 @@ def clearInputBox():
 
 def backFromThirdApp():
     while d(text = u'院线热映').wait.gone(timeout = 3000):
-        d.swipe(700, 1700, 700, 1000, steps = 30)
+        swipeUp()
     d(resourceId='com.letv.android.quicksearchbox:id/image').click()
     time.sleep(2)
     d.press('back')
@@ -71,7 +71,7 @@ def backFromResult():
 
 def backFromEditsWidget():
     while d(text = u'编辑我的订阅').wait.gone(timeout = 3000):
-        d.swipe(700, 1700, 700, 1000, steps = 30)
+        swipeUp()
     d(text = u'编辑我的订阅').click()
     d.press('back')
 
@@ -158,12 +158,7 @@ def actEndViaBack():
 
 def actEndViaThrdParty():
     launchPano()
-    p = 0
-    while d(text = u'短视频').wait.gone():
-        p += 1
-        swipeUp()
-        if p > 4:
-            break
+    swipeToFindText('短视频')
     d(text=u'短视频').down(resourceId='com.letv.android.quicksearchbox:id/template_item').click()
     time.sleep(5)
 
@@ -241,6 +236,7 @@ def clickCancelResult():
     d(text = u'取消').click()
 
 def clickClearButton():
+    launchPano()
     clearInputBox()
 
 def exposeSERPHistory():
@@ -253,12 +249,7 @@ def exposeSERPHistory():
 
 def exposeSERPHot():
     launchPano()
-    p = 0
-    while d(text = u'大家都在搜').wait.gone():
-        p += 1
-        swipeUp()
-        if p > 10:
-            break
+    swipeToFindText('大家都在搜')
     d(text = u'大家都在搜').down(resourceId = 'com.letv.android.quicksearchbox:id/content').click()
 
 def exposeSERPInput():
@@ -298,12 +289,7 @@ def clickMoreEpisode():
 def clickShowOnWeb():
     launchPano()
     inputText('a')
-    p = 0
-    while d(text = u'搜索网页').wait.gone():
-        p += 1
-        swipeUp()
-        if p > 10:
-            break
+    swipeToFindText('搜索网页')
     d(text = u'搜索网页').click()
     time.sleep(2)
 
@@ -342,37 +328,22 @@ def clickCallTheCar():
 def clickInstallApp():
     launchPano()
     inputText('shipin')
-    p = 0
-    while d(text = u'安装').wait.gone():
-        p += 1
-        swipeUp()
-        if p > 10:
-            break
+    swipeToFindText('安装')
     d(text = u'安装').click()
     time.sleep(2)
     d(text = u'暂停').click()
 
 def clickUpgradeApp():
     # launchPano()
-    # inputText('shipin')
-    # p = 0
-    # while d(text = u'更新').wait.gone():
-    #     p += 1
-    #     swipeUp()
-    #     if p > 10:
-    #         break
+    # inputText('live')
+    # swipeToFindText('更新')
     # d(text = u'更新').click()
     pass
 
 def clickOpenApp():
     launchPano()
     inputText('shipin')
-    p = 0
-    while d(text = u'安装').wait.gone():
-        p += 1
-        swipeUp()
-        if p > 10:
-            break
+    swipeToFindText('安装')
     d(text = u'安装').click()
     time.sleep(120)
     d(text = u'打开').click()
@@ -380,12 +351,7 @@ def clickOpenApp():
 def clickPlayNow():
     launchPano()
     inputText('shipin')
-    p = 0
-    while d(text = u'立即播放').wait.gone():
-        p += 1
-        swipeUp()
-        if p > 10:
-            break
+    swipeToFindText('立即播放')
     d(text = u'立即播放').click()
     time.sleep(2)
 
@@ -442,10 +408,7 @@ def exposePanoSettingsFromCardEdit():
 
 def exposePanoSettingsFromUnlockScreen():
     actFromSysSettings()
-    d.press('power')
-    time.sleep(2)
-    d.press('power')
-    swipeUp()
+    lockThenUnlock()
 
 def exposePanoSettingsFromMenulist():
     actFromSysSettings()
@@ -453,3 +416,127 @@ def exposePanoSettingsFromMenulist():
     time.sleep(1)
     d.press('back')
 
+def exposePersonalSettingsFromScreenlock():
+    actFromSysSettings()
+    d(text = u'首页个性化设置').click()
+    lockThenUnlock()
+
+def exposePersonalSettingsFromTask():
+    actFromSysSettings()
+    d(text = u'首页个性化设置').click()
+    d.press('menu')
+    time.sleep(1)
+    d.press('back')
+
+def exposePersonalSettingsFromHomepage():
+    launchPano()
+    swipeToFindText('进入个性化设置')
+    d(text = u'进入个性化设置').click()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_switch').click()
+    d.press('back')
+
+def lockThenUnlock():
+    d.press('power')
+    time.sleep(2)
+    d.press('power')
+    swipeUp()
+
+def exposeFeedbackFromScreenLock():
+    actFromSysSettings()
+    d(text = u'用户反馈').click()
+    lockThenUnlock()
+
+def exposeFeedbackFromTask():
+    actFromSysSettings()
+    d(text = u'用户反馈').click()
+    d.press('menu')
+    time.sleep(1)
+    d.press('back')
+
+def exposeFeedbackFromHomepage():
+    actFromSysSettings()
+    d(text = u'用户反馈').click()
+
+def clickSwitchOn():
+    actFromSysSettings()
+    d(text = u'首页个性化设置').click()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_switch').click()
+    d.press('back')
+
+def clickSwitchOff():
+    actFromSysSettings()
+    d(text = u'首页个性化设置').click()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_switch').click()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/back').click()
+
+def clickTogoLIVEinSERP():
+    launchPano()
+    inputText('zhibo')
+    swipeToFindText('直播中')
+    d(text = u'直播中').click()
+
+def clickSubscribeLIVEinSERP():
+    launchPano()
+    inputText('zhibo')
+    swipeToFindText('去预约')
+    d(text = u'去预约').click()
+
+def clickPreloadinSERP():
+    launchPano()
+    inputText('dianshiju')
+    swipeToFindText('缓存')
+    d(text = u'缓存').click()
+
+def clickGoinSERP():
+    launchPano()
+    inputText('baidu')
+    swipeToFindText('直达')
+    d(text = u'直达').click()
+
+def clickRecentFilminSERP():
+    launchPano()
+    inputText('yingyuan')
+    swipeToFindText('近期上映')
+    d(text = u'近期上映').click()
+
+def clickNavigationinSERP():
+    launchPano()
+    inputText('yingyuan')
+    swipeToFindText('导航')
+    d(text = u'导航').click()
+
+def swipeToFindText(text):
+    p = 0
+    while d(text = u'%s'%text).wait.gone():
+        p += 1
+        swipeUp()
+        if p > 10:
+            break
+
+def clickCallCarinSERP():
+    launchPano()
+    inputText('yingyuan')
+    swipeToFindText('叫车')
+    d(text = u'叫车').click()
+
+def clickFilminSERP():
+    clickRecentFilminSERP()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/movie_name').click()
+
+def clickCancelInstallinSERP():
+    clickInstallApp()
+
+def clickContinueInstallinSERP():
+    clickInstallApp()
+    d(text = u'继续').click()
+
+def clickHotWords():
+    launchPano()
+    searchbox = 'com.letv.android.quicksearchbox:id/search_src_text'
+    d(resourceId = searchbox).click()
+    d.press('search')
+
+def exposeQVSERP():
+    launchPano()
+    inputText('a')
+    time.sleep(2)

@@ -540,3 +540,11 @@ def exposeQVSERP():
     launchPano()
     inputText('a')
     time.sleep(2)
+
+def clickBuyTicket():
+    launchPano()
+    swipeToFindText('院线热映')
+    swipeToFindText('叫车')
+    while d(text = u'购票').wait.gone():
+        d(text = u'院线热映').right(resourceId = 'com.letv.android.quicksearchbox:id/flush').click()
+    d(text = u'购票').click()

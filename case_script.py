@@ -4,8 +4,8 @@ from uiautomator import device as d
 import time
 import os
 
-def swipeUp():
-    d.swipe(550, 1500, 450, 800, steps=15)
+def swipeUp(speed = 15):
+    d.swipe(550, 1500, 450, 800, steps = speed)
 
 def launchPano():
     d.press('home')
@@ -548,3 +548,35 @@ def clickBuyTicket():
     while d(text = u'购票').wait.gone():
         d(text = u'院线热映').right(resourceId = 'com.letv.android.quicksearchbox:id/flush').click()
     d(text = u'购票').click()
+
+def clickSwitchSort():
+    launchPano()
+    swipeToFindText('进入个性化设置')
+    d(text = u'进入个性化设置').click()
+    d(text = u'卡片智能化排序').click()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/back').click()
+
+def exposeEachCard():
+    launchPano()
+    swipeUp(30)
+    time.sleep(2)
+
+def clickEachCard():
+    clickBuyTicket()
+
+def searchResEachCard():
+    launchPano()
+    inputText('a')
+    time.sleep(5)
+    swipeToFindText('立即播放')
+    d(text = u'立即播放').click()
+
+def exposeSERP():
+    launchPano()
+    inputText('a')
+    time.sleep(5)
+    swipeUp(30)
+    time.sleep(2)
+
+def exposeHomepageEachCard():
+    exposeEachCard()

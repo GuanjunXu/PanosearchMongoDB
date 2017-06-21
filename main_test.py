@@ -12,6 +12,9 @@ app_id = "PanoSearch"
 imei = '862131030039861'
 start_id = ''
 
+test_priority = ["P0", "P1", "P2"]
+test_version = ["2.5.0", "3.0.0", "3.0.2"]
+
 host = '10.185.29.20'
 port = 27017
 
@@ -34,6 +37,8 @@ def mainTest():
     for i in range(1, nrows):
         col_values = sh.row_values(i)
         k_v = dict(zip(col_names, col_values))
+        if k_v['Ver'] not in test_version or k_v['Priority'] not in test_priority:
+            continue
         print k_v['CaseNo'] + ' ' + k_v['FuncName'] + ' ... Running ...',
         if k_v['EventType'] in ['run', 'ready', 'exit']:
             collection = db.app

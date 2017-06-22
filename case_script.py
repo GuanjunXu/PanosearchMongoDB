@@ -1,11 +1,22 @@
 # -*- coding: utf-8 -*-
 
-from uiautomator import device as d
 import time
 import os
+# from uiautomator import device as d
+from uiautomator import Device
+
+d = Device('LP036778G6260000789')
+
+w = 1080
+h = 1920
+w_m = w/2
+h_m = h/2
 
 def swipeUp(speed = 15):
-    d.swipe(550, 1500, 450, 800, steps = speed)
+    d.swipe(w_m, h-500, w_m-100, h/2, steps = speed)
+
+def slideDown(speed = 15):
+    d.swipe(w_m, h/3, w_m, h, steps = speed)
 
 def launchPano():
     d.press('home')
@@ -23,7 +34,7 @@ def actSlideUp():
     launchPano()
 
 def slideDownRefresh():
-    d.swipe(550, 700, 550, 1500,steps=10)
+    slideDown(10)
 
 def backspaceOnInputBox():
     inputText('a')
@@ -79,13 +90,13 @@ def unlockScreen():
     d.press('power')
     time.sleep(1)
     d.press('power')
-    d.swipe(700, 1700, 700, 500)
+    swipeUp()
 
 def launchFromSysSettings():
     d.press('home')
     d(text = u'设置').click()
     while d(text = u'万象搜索').wait.gone(timeout = 3000):
-        d.swipe(600, 1700, 600, 500)
+        swipeUp()
     d(text = u'万象搜索').click()
     time.sleep(3)
 
@@ -94,7 +105,7 @@ def actFromSysSettings():
     d.press('home')
     d(text = u'设置').click()
     while d(text = u'万象搜索').wait.gone(timeout = 3000):
-        d.swipe(600, 1700, 600, 500)
+        swipeUp()
     d(text = u'万象搜索').click()
 
 def launchWallet():
@@ -115,7 +126,7 @@ def exitViaCancel():
 def exitViaMenu():
     launchSlideUp()
     d.press('menu')
-    d.swipe(550, 900, 1000, 900, steps = 10)
+    d.swipe(w_m, h/2, w, h/2, steps = 10)
     time.sleep(2)
     d.press('back')
 
@@ -580,3 +591,10 @@ def exposeSERP():
 
 def exposeHomepageEachCard():
     exposeEachCard()
+
+def captureScreenAndPull(f_name, pc_dir):
+    f_name = f_name[:-4]
+    os.popen('adb shell /system/bin/screencap -p /sdcard/pano_fail_png/%s.png'%f_name)
+    os.popen('adb pull /sdcard/pano_fail_png/%s.png %s'%(f_name, pc_dir))
+    time.sleep(2)
+    os.popen('adb shell rm /sdcard/pano_fail_png/%s.png'%f_name)

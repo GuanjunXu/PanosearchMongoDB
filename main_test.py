@@ -21,6 +21,10 @@ test_version = ["2.5.0", "3.0.0", "3.0.2"]
 host = '10.185.29.20'
 port = 27017
 
+gaps = 30
+
+single_case = None
+
 client = pymongo.MongoClient(host, port)
 db = client.preline_debug
 
@@ -37,7 +41,10 @@ def mainTest():
     ncols = sh.ncols
     col_names = sh.row_values(0)
     os.chdir(result_path)
-    for i in range(14, nrows):
+    start_line, end_line = 1, nrows
+    if single_case != None:
+        start_line, end_line = single_case, single_case + 1
+    for i in range(start_line, end_line):
         col_values = sh.row_values(i)
         k_v = dict(zip(col_names, col_values))
         if k_v['Ver'] not in test_version or k_v['Priority'] not in test_priority:
@@ -46,7 +53,7 @@ def mainTest():
             k_v['CaseNo'] = int(k_v['CaseNo'])
         except:
             pass
-        print str(k_v['CaseNo']) + '\t' + k_v['FuncName'] + ' ... Running ...',
+        print str(k_v['CaseNo']) + '\t' + k_v['FuncName'] + '\t... Running ...\t',
         if k_v['EventType'] in ['run', 'ready', 'exit']:
             collection = db.app
         else:
@@ -56,7 +63,7 @@ def mainTest():
         test_result = 'NoData'
         try:
             exec('case_script.' + k_v['FuncName'] + '()') # Run test case
-            time.sleep(10)
+            time.sleep(gaps)
         except:
             test_result = 'Err'
         find_par = eval(k_v['FindPar'])
@@ -76,13 +83,11 @@ def mainTest():
             if '=' in prop:
                 prop = dict([prop.split('=')])
             props.append(prop)
-        # print "props: "+str(props)
         data_props_list = []
         for f_data in find_result_list:
             for sub_dic in f_data['props']:
                 data_props_list.append(sub_dic)
         for p in props:
-            # print "p: "+str(p)
             ppc = 0
             for pp in data_props_list:
                 if type(p) != dict and p in pp.values():
@@ -97,7 +102,7 @@ def mainTest():
                         break
                 ppc += 1
                 if ppc == len(data_props_list):
-                    fail_reason = '\n\n**** ' + str(p) + ' has error' + ' ****'
+                    fail_reason = '\n\n-*-*-*-*- ' + str(p) + ' has error -*-*-*-*-'
                     test_result = 'FAIL'
                     ppc = 0
             if test_result == 'FAIL':
@@ -109,6 +114,6 @@ def mainTest():
         print test_result
         if test_result != 'PASS':
             case_script.captureScreenAndPull(f_name_o, result_path)
-        case_script.exitViaMenu()
+        case_script.taskClear()
         
 mainTest()

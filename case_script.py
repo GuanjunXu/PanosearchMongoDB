@@ -2,8 +2,12 @@
 
 import time
 import os
+import sys
 # from uiautomator import device as d
 from uiautomator import Device
+
+reload(sys)
+sys.setdefaultencoding('gbk')
 
 d = Device('LP036778G6260000789')
 
@@ -64,6 +68,7 @@ def inputText(ttt):
     d(resourceId = searchbox).click()
     d(resourceId = searchbox).set_text(ttt) # Input a
     time.sleep(1)
+    d(resourceId = 'com.letv.android.quicksearchbox:id/group_title').click()
 
 def clearInputBox():
     inputText('a')
@@ -125,8 +130,9 @@ def exitViaCancel():
 
 def exitViaMenu():
     launchSlideUp()
-    d.press('menu')
-    d.swipe(w_m, h/2, w, h/2, steps = 10)
+    d.press('recent')
+    time.sleep(1)
+    d.swipe(w_m, h/2, w, h/2, steps = 5)
     time.sleep(2)
     d.press('back')
 
@@ -169,7 +175,7 @@ def actEndViaBack():
 
 def actEndViaThrdParty():
     launchPano()
-    swipeToFindText('短视频')
+    swipeToFindText(txt = u'短视频')
     d(text=u'短视频').down(resourceId='com.letv.android.quicksearchbox:id/template_item').click()
     time.sleep(5)
 
@@ -211,6 +217,7 @@ def exposeWallet():
     launchFromWallet()
 
 def exposeBackFromResult():
+    launchPano()
     inputText('a')
     d.pres('back')
 
@@ -225,6 +232,7 @@ def exposeBackFromScreenLock():
     d.press('power')
     time.sleep(3)
     d.press('power')
+    time.sleep(3)
     swipeUp()
 
 def clickSearchHomePage():
@@ -260,7 +268,7 @@ def exposeSERPHistory():
 
 def exposeSERPHot():
     launchPano()
-    swipeToFindText('大家都在搜')
+    swipeToFindText(txt = u'大家都在搜')
     d(text = u'大家都在搜').down(resourceId = 'com.letv.android.quicksearchbox:id/content').click()
 
 def exposeSERPInput():
@@ -300,7 +308,7 @@ def clickMoreEpisode():
 def clickShowOnWeb():
     launchPano()
     inputText('a')
-    swipeToFindText('搜索网页')
+    swipeToFindText(txt = u'搜索网页')
     d(text = u'搜索网页').click()
     time.sleep(2)
 
@@ -321,13 +329,13 @@ def clickFollowed():
 def clickSendSMS():
     launchPano()
     inputText('gao')
-    d(resouceId = 'com.letv.android.quicksearchbox:id/message_image').click()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/message_image').click()
     time.sleep(2)
 
 def clickCallOut():
     launchPano()
     inputText('gao')
-    d(resouceId = 'com.letv.android.quicksearchbox:id/call_image').click()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/call_image').click()
     time.sleep(2)
 
 def clickCallTheCar():
@@ -339,7 +347,7 @@ def clickCallTheCar():
 def clickInstallApp():
     launchPano()
     inputText('shipin')
-    swipeToFindText('安装')
+    swipeToFindText(txt = u'安装')
     d(text = u'安装').click()
     time.sleep(2)
     d(text = u'暂停').click()
@@ -347,14 +355,14 @@ def clickInstallApp():
 def clickUpgradeApp():
     # launchPano()
     # inputText('live')
-    # swipeToFindText('更新')
+    # swipeToFindText(txt = u'更新')
     # d(text = u'更新').click()
     pass
 
 def clickOpenApp():
     launchPano()
     inputText('shipin')
-    swipeToFindText('安装')
+    swipeToFindText(txt = u'安装')
     d(text = u'安装').click()
     time.sleep(120)
     d(text = u'打开').click()
@@ -362,7 +370,7 @@ def clickOpenApp():
 def clickPlayNow():
     launchPano()
     inputText('shipin')
-    swipeToFindText('立即播放')
+    swipeToFindText(txt = u'立即播放')
     d(text = u'立即播放').click()
     time.sleep(2)
 
@@ -405,8 +413,9 @@ def exposePanoSettingsFromSysSettings():
 
 def exposePanoSettingsFromPersonalSettings():
     actFromSysSettings()
-    d(text = u'首页个性化设置').click()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_setting').click()
     d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_switch').click()
+    time.sleep(2)
     d.press('back')
 
 def exposePanoSettingsFromFeedback():
@@ -423,27 +432,28 @@ def exposePanoSettingsFromUnlockScreen():
 
 def exposePanoSettingsFromMenulist():
     actFromSysSettings()
-    d.press('menu')
+    d.press('recent')
     time.sleep(1)
     d.press('back')
 
 def exposePersonalSettingsFromScreenlock():
     actFromSysSettings()
-    d(text = u'首页个性化设置').click()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_setting').click()
     lockThenUnlock()
 
 def exposePersonalSettingsFromTask():
     actFromSysSettings()
-    d(text = u'首页个性化设置').click()
-    d.press('menu')
+    d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_setting').click()
+    d.press('recent')
     time.sleep(1)
     d.press('back')
 
 def exposePersonalSettingsFromHomepage():
     launchPano()
-    swipeToFindText('进入个性化设置')
+    swipeToFindText(txt = u'进入个性化设置')
     d(text = u'进入个性化设置').click()
     d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_switch').click()
+    time.sleep(2)
     d.press('back')
 
 def lockThenUnlock():
@@ -460,7 +470,7 @@ def exposeFeedbackFromScreenLock():
 def exposeFeedbackFromTask():
     actFromSysSettings()
     d(text = u'用户反馈').click()
-    d.press('menu')
+    d.press('recent')
     time.sleep(1)
     d.press('back')
 
@@ -470,55 +480,57 @@ def exposeFeedbackFromHomepage():
 
 def clickSwitchOn():
     actFromSysSettings()
-    d(text = u'首页个性化设置').click()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_setting').click()
     d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_switch').click()
+    time.sleep(2)
     d.press('back')
 
 def clickSwitchOff():
     actFromSysSettings()
-    d(text = u'首页个性化设置').click()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_setting').click()
     d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_switch').click()
+    time.sleep(2)
     d(resourceId = 'com.letv.android.quicksearchbox:id/back').click()
 
 def clickTogoLIVEinSERP():
     launchPano()
     inputText('zhibo')
-    swipeToFindText('直播中')
+    swipeToFindText(txt = u'直播中')
     d(text = u'直播中').click()
 
 def clickSubscribeLIVEinSERP():
     launchPano()
     inputText('zhibo')
-    swipeToFindText('去预约')
+    swipeToFindText(txt = u'去预约')
     d(text = u'去预约').click()
 
 def clickPreloadinSERP():
     launchPano()
     inputText('dianshiju')
-    swipeToFindText('缓存')
+    swipeToFindText(txt = u'缓存')
     d(text = u'缓存').click()
 
 def clickGoinSERP():
     launchPano()
     inputText('baidu')
-    swipeToFindText('直达')
+    swipeToFindText(txt = u'直达')
     d(text = u'直达').click()
 
 def clickRecentFilminSERP():
     launchPano()
     inputText('yingyuan')
-    swipeToFindText('近期上映')
+    swipeToFindText(txt = u'近期上映')
     d(text = u'近期上映').click()
 
 def clickNavigationinSERP():
     launchPano()
     inputText('yingyuan')
-    swipeToFindText('导航')
+    swipeToFindText(txt = u'导航')
     d(text = u'导航').click()
 
-def swipeToFindText(text):
+def swipeToFindText(txt):
     p = 0
-    while d(text = u'%s'%text).wait.gone():
+    while d(text = u'%s'%txt).wait.gone():
         p += 1
         swipeUp()
         if p > 10:
@@ -527,7 +539,7 @@ def swipeToFindText(text):
 def clickCallCarinSERP():
     launchPano()
     inputText('yingyuan')
-    swipeToFindText('叫车')
+    swipeToFindText(txt = u'叫车')
     d(text = u'叫车').click()
 
 def clickFilminSERP():
@@ -554,15 +566,16 @@ def exposeQVSERP():
 
 def clickBuyTicket():
     launchPano()
-    swipeToFindText('院线热映')
-    swipeToFindText('叫车')
+    swipeToFindText(txt = u'院线热映')
+    swipeToFindText(txt = u'叫车')
     while d(text = u'购票').wait.gone():
         d(text = u'院线热映').right(resourceId = 'com.letv.android.quicksearchbox:id/flush').click()
+        time.sleep(2)
     d(text = u'购票').click()
 
 def clickSwitchSort():
     launchPano()
-    swipeToFindText('进入个性化设置')
+    swipeToFindText(txt = u'进入个性化设置')
     d(text = u'进入个性化设置').click()
     d(text = u'卡片智能化排序').click()
     d(resourceId = 'com.letv.android.quicksearchbox:id/back').click()
@@ -579,7 +592,7 @@ def searchResEachCard():
     launchPano()
     inputText('a')
     time.sleep(5)
-    swipeToFindText('立即播放')
+    swipeToFindText(txt = u'立即播放')
     d(text = u'立即播放').click()
 
 def exposeSERP():
@@ -594,7 +607,15 @@ def exposeHomepageEachCard():
 
 def captureScreenAndPull(f_name, pc_dir):
     f_name = f_name[:-4]
+    os.popen('adb shell mkdir sdcard/pano_fail_png')
     os.popen('adb shell /system/bin/screencap -p /sdcard/pano_fail_png/%s.png'%f_name)
     os.popen('adb pull /sdcard/pano_fail_png/%s.png %s'%(f_name, pc_dir))
     time.sleep(2)
     os.popen('adb shell rm /sdcard/pano_fail_png/%s.png'%f_name)
+
+def taskClear():
+    d.press('recent')
+    time.sleep(1)
+    d.swipe(w_m, h/2, w, h/2, steps = 5)
+    time.sleep(3)
+    d.press('back')

@@ -68,7 +68,10 @@ def inputText(ttt):
     d(resourceId = searchbox).click()
     d(resourceId = searchbox).set_text(ttt) # Input a
     time.sleep(1)
-    d(resourceId = 'com.letv.android.quicksearchbox:id/group_title').click()
+    try:
+        d(resourceId = 'com.letv.android.quicksearchbox:id/group_title').click()
+    except:
+        pass
 
 def clearInputBox():
     inputText('a')

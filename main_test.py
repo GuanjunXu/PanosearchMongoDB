@@ -21,7 +21,7 @@ test_version = ["2.5.0", "3.0.0", "3.0.2"]
 host = '10.185.29.20'
 port = 27017
 
-gaps = 30
+gaps = 60
 
 single_case = None
 
@@ -58,7 +58,7 @@ def mainTest():
             collection = db.app
         else:
             collection = db.event
-        case_script.exitPano()
+        case_script.taskClear()
         collection.remove({"app_id":app_id,"imei":imei}) # Clear history
         test_result = 'NoData'
         try:
@@ -114,6 +114,6 @@ def mainTest():
         print test_result
         if test_result != 'PASS':
             case_script.captureScreenAndPull(f_name_o, result_path)
-        case_script.taskClear()
+        
         
 mainTest()

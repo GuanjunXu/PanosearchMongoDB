@@ -22,7 +22,6 @@ host = '10.185.29.20'
 port = 27017
 
 gaps = 60
-
 single_case = None
 
 client = pymongo.MongoClient(host, port)

@@ -463,6 +463,7 @@ def lockThenUnlock():
     d.press('power')
     time.sleep(2)
     d.press('power')
+    time.sleep(2)
     swipeUp()
 
 def exposeFeedbackFromScreenLock():

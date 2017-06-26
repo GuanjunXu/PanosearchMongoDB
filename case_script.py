@@ -16,7 +16,7 @@ h = 1920
 w_m = w/2
 h_m = h/2
 
-def swipeUp(speed = 15):
+def slideUp(speed = 15):
     d.swipe(w_m, h-500, w_m-100, h/2, steps = speed)
 
 def slideDown(speed = 15):
@@ -25,7 +25,7 @@ def slideDown(speed = 15):
 def launchPano():
     d.press('home')
     time.sleep(1)
-    swipeUp()
+    slideUp()
     time.sleep(3)
 
 def exitPano():
@@ -42,6 +42,8 @@ def slideDownRefresh():
 
 def backspaceOnInputBox():
     inputText('a')
+    searchbox = 'com.letv.android.quicksearchbox:id/search_src_text'
+    d(resourceId = searchbox).click()
     d.press('delete') # Delete a
 
 def launchHoldHomekey():
@@ -67,7 +69,7 @@ def inputText(ttt):
     searchbox = 'com.letv.android.quicksearchbox:id/search_src_text'
     d(resourceId = searchbox).click()
     d(resourceId = searchbox).set_text(ttt) # Input a
-    time.sleep(1)
+    time.sleep(2)
     try:
         d(resourceId = 'com.letv.android.quicksearchbox:id/group_title').click()
     except:
@@ -79,7 +81,7 @@ def clearInputBox():
 
 def backFromThirdApp():
     while d(text = u'院线热映').wait.gone(timeout = 3000):
-        swipeUp()
+        slideUp()
     d(resourceId='com.letv.android.quicksearchbox:id/image').click()
     time.sleep(2)
     d.press('back')
@@ -90,7 +92,7 @@ def backFromResult():
 
 def backFromEditsWidget():
     while d(text = u'编辑我的订阅').wait.gone(timeout = 3000):
-        swipeUp()
+        slideUp()
     d(text = u'编辑我的订阅').click()
     d.press('back')
 
@@ -98,13 +100,13 @@ def unlockScreen():
     d.press('power')
     time.sleep(1)
     d.press('power')
-    swipeUp()
+    slideUp()
 
 def launchFromSysSettings():
     d.press('home')
     d(text = u'设置').click()
     while d(text = u'万象搜索').wait.gone(timeout = 3000):
-        swipeUp()
+        slideUp()
     d(text = u'万象搜索').click()
     time.sleep(3)
 
@@ -113,12 +115,14 @@ def actFromSysSettings():
     d.press('home')
     d(text = u'设置').click()
     while d(text = u'万象搜索').wait.gone(timeout = 3000):
-        swipeUp()
+        slideUp()
     d(text = u'万象搜索').click()
 
 def launchWallet():
     os.popen('adb shell am force-stop com.letv.walletbiz')
     os.popen('adb shell am start -n com.letv.walletbiz/com.letv.walletbiz.MainActivity')
+    if d(textContains = u'稍后').wait.exists():
+        d(textContains = u'稍后').click()
 
 def launchFromWallet():
     launchWallet()
@@ -178,8 +182,8 @@ def actEndViaBack():
 
 def actEndViaThrdParty():
     launchPano()
-    swipeToFindText(txt = u'短视频')
-    d(text=u'短视频').down(resourceId='com.letv.android.quicksearchbox:id/template_item').click()
+    swipeToFindText(txt = u'院线热映')
+    d(text=u'院线热映').down(u'您的附近正在上映').click()
     time.sleep(5)
 
 def actEndViaCancel():
@@ -236,7 +240,7 @@ def exposeBackFromScreenLock():
     time.sleep(3)
     d.press('power')
     time.sleep(3)
-    swipeUp()
+    slideUp()
 
 def clickSearchHomePage():
     launchPano()
@@ -304,7 +308,9 @@ def clickEpisode():
 
 def clickMoreEpisode():
     launchPano()
-    inputText('a')
+    inputText('p')
+    time.sleep(1)
+    swipeToFindText(txt = u'更多')
     d(text = u'更多', resourceId = 'com.letv.android.quicksearchbox:id/txt_episode').click()
     time.sleep(2)
 
@@ -349,7 +355,7 @@ def clickCallTheCar():
 
 def clickInstallApp():
     launchPano()
-    inputText('shipin')
+    inputText('a')
     swipeToFindText(txt = u'安装')
     d(text = u'安装').click()
     time.sleep(2)
@@ -363,12 +369,13 @@ def clickUpgradeApp():
     pass
 
 def clickOpenApp():
-    launchPano()
-    inputText('shipin')
-    swipeToFindText(txt = u'安装')
-    d(text = u'安装').click()
-    time.sleep(120)
-    d(text = u'打开').click()
+    # launchPano()
+    # inputText('shipin')
+    # swipeToFindText(txt = u'安装')
+    # d(text = u'安装').click()
+    # time.sleep(120)
+    # d(text = u'打开').click()
+    pass
 
 def clickPlayNow():
     launchPano()
@@ -384,7 +391,7 @@ def clickContactListSMS():
 def expseContactListSMS():
     clickContactListSMS()
 
-def clickCancelContactList():
+def clickCancelContactListSMS():
     clickSendSMS()
     d(text = u'取消').click()
 
@@ -405,7 +412,7 @@ def clickNextPage():
     p = 0
     while d(resourceId = nextPage).wait.gone():
         p += 1
-        swipeUp()
+        slideUp()
         if p > 10:
             break
     d(resourceId = nextPage).click()
@@ -464,7 +471,7 @@ def lockThenUnlock():
     time.sleep(2)
     d.press('power')
     time.sleep(2)
-    swipeUp()
+    slideUp()
 
 def exposeFeedbackFromScreenLock():
     actFromSysSettings()
@@ -536,7 +543,7 @@ def swipeToFindText(txt):
     p = 0
     while d(text = u'%s'%txt).wait.gone():
         p += 1
-        swipeUp()
+        slideUp()
         if p > 10:
             break
 
@@ -548,14 +555,17 @@ def clickCallCarinSERP():
 
 def clickFilminSERP():
     clickRecentFilminSERP()
+    slideUp()
     d(resourceId = 'com.letv.android.quicksearchbox:id/movie_name').click()
 
 def clickCancelInstallinSERP():
-    clickInstallApp()
+    # clickInstallApp()
+    pass
 
 def clickContinueInstallinSERP():
-    clickInstallApp()
-    d(text = u'继续').click()
+    # clickInstallApp()
+    # d(text = u'继续').click()
+    pass
 
 def clickHotWords():
     launchPano()
@@ -586,7 +596,7 @@ def clickSwitchSort():
 
 def exposeEachCard():
     launchPano()
-    swipeUp(30)
+    slideUp(30)
     time.sleep(2)
 
 def clickEachCard():
@@ -597,13 +607,14 @@ def searchResEachCard():
     inputText('a')
     time.sleep(5)
     swipeToFindText(txt = u'立即播放')
-    d(text = u'立即播放').click()
+    # d(text = u'立即播放').click()
+    d(resourceId = 'com.letv.android.quicksearchbox:id/imgposter').click()
 
 def exposeSERP():
     launchPano()
     inputText('a')
     time.sleep(5)
-    swipeUp(30)
+    slideUp(30)
     time.sleep(2)
 
 def exposeHomepageEachCard():
@@ -622,4 +633,4 @@ def taskClear():
     time.sleep(1)
     d.swipe(w_m, h/2, w, h/2, steps = 5)
     time.sleep(3)
-    d.press('back')
+    d.press('home')

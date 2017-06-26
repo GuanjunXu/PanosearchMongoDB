@@ -6,6 +6,7 @@ import json
 import pymongo
 import os
 import time
+import shutil
 # from uiautomator import device as d
 from uiautomator import Device
 
@@ -21,7 +22,7 @@ test_version = ["2.5.0", "3.0.0", "3.0.2"]
 host = '10.185.29.20'
 port = 27017
 
-gaps = 60
+gaps = 30
 single_case = None
 
 client = pymongo.MongoClient(host, port)
@@ -42,7 +43,7 @@ def mainTest():
     os.chdir(result_path)
     start_line, end_line = 1, nrows
     if single_case != None:
-        start_line, end_line = single_case, single_case + 1
+        start_line, end_line = single_case - 1, single_case
     for i in range(start_line, end_line):
         col_values = sh.row_values(i)
         k_v = dict(zip(col_names, col_values))
@@ -52,23 +53,31 @@ def mainTest():
             k_v['CaseNo'] = int(k_v['CaseNo'])
         except:
             pass
-        print str(k_v['CaseNo']) + '\t' + k_v['FuncName'] + '\t... Running ...\t',
+        print str(i+1) + '\t' + str(k_v['CaseNo']) + '\t' + k_v['FuncName'] + '\t... Running ...\t',
         if k_v['EventType'] in ['run', 'ready', 'exit']:
             collection = db.app
         else:
             collection = db.event
-        case_script.taskClear()
+        case_script.exitPano()
         collection.remove({"app_id":app_id,"imei":imei}) # Clear history
         test_result = 'NoData'
         try:
             exec('case_script.' + k_v['FuncName'] + '()') # Run test case
-            time.sleep(gaps)
+            # time.sleep(gaps)
         except:
             test_result = 'Err'
         find_par = eval(k_v['FindPar'])
         find_result = collection.find(find_par)
+        broken_count = 0
+        while len([item for item in find_result]) == 0:
+            find_result = collection.find(find_par)
+            time.slee(5)
+            broken_count += 1
+            if broken_count > 10:
+                test_result = 'FindDBFailed'
+                break
         f_name_o = str(k_v['CaseNo']) + '_' + k_v['FuncName'] + '.txt'
-        f = open(f_name_o, 'a')
+        f = open(f_name_o, 'w')
         fail_reason = ''
         find_result_list = []
         for data in find_result:
@@ -114,5 +123,15 @@ def mainTest():
         if test_result != 'PASS':
             case_script.captureScreenAndPull(f_name_o, result_path)
         
+def arrangeFiles(dir_work, new_dir):
+    file_list = os.listdir(result_path)
+    try:
+        os.mkdir(new_dir)
+    except:
+        pass
+    for f in file_list:
+        if f[-8:-4] == 'PASS':
+            shutil.move(f, new_dir)
         
 mainTest()
+arrangeFiles(result_path, 'PASS')

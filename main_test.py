@@ -22,7 +22,7 @@ test_version = ["2.5.0", "3.0.0", "3.0.2"]
 host = '10.185.29.20'
 port = 27017
 
-gaps = 30
+gaps = 10
 single_case = None
 
 client = pymongo.MongoClient(host, port)
@@ -42,6 +42,7 @@ def mainTest():
     col_names = sh.row_values(0)
     os.chdir(result_path)
     start_line, end_line = 1, nrows
+    print "-*-*-*- Go -*-*-*-\nResult path as: %s"%result_path
     if single_case != None:
         start_line, end_line = single_case - 1, single_case
     for i in range(start_line, end_line):
@@ -63,7 +64,7 @@ def mainTest():
         test_result = 'NoData'
         try:
             exec('case_script.' + k_v['FuncName'] + '()') # Run test case
-            # time.sleep(gaps)
+            time.sleep(gaps)
         except:
             test_result = 'Err'
         find_par = eval(k_v['FindPar'])
@@ -71,11 +72,12 @@ def mainTest():
         broken_count = 0
         while len([item for item in find_result]) == 0:
             find_result = collection.find(find_par)
-            time.slee(5)
+            time.sleep(5)
             broken_count += 1
             if broken_count > 10:
                 test_result = 'FindDBFailed'
                 break
+        find_result = collection.find(find_par)
         f_name_o = str(k_v['CaseNo']) + '_' + k_v['FuncName'] + '.txt'
         f = open(f_name_o, 'w')
         fail_reason = ''
@@ -122,6 +124,7 @@ def mainTest():
         print test_result
         if test_result != 'PASS':
             case_script.captureScreenAndPull(f_name_o, result_path)
+    print "-*-*-*- End -*-*-*-"
         
 def arrangeFiles(dir_work, new_dir):
     file_list = os.listdir(result_path)

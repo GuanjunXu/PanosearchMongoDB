@@ -11,6 +11,8 @@ sys.setdefaultencoding('gbk')
 
 d = Device('LP036778G6260000789')
 
+yuanxianreying = u"反转人生"
+
 w = 1080
 h = 1920
 w_m = w/2
@@ -288,7 +290,9 @@ def exposeSERPHome():
     launchPano()
     inputText('a')
     time.sleep(3)
-    launchPano()
+    d.press('home')
+    time.sleep(3)
+    slideUp()
 
 def clickMoreButton(card_name = None):
     if card_name != None:
@@ -304,7 +308,7 @@ def clickMoreSERP():
 
 def clickEpisode():
     launchPano()
-    inputText('a')
+    inputText('zhz')
     d(resourceId = 'com.letv.android.quicksearchbox:id/txt_episode').click()
     time.sleep(2)
 
@@ -369,11 +373,11 @@ def clickCallTheCar():
 
 def clickInstallApp():
     launchPano()
-    inputText('a')
+    inputText(u'崩坏')
     swipeToFindText(txt = u'安装')
     slideUp()
     d(text = u'安装').click()
-    time.sleep(2)
+    time.sleep(5)
     d(text = u'暂停').click()
 
 def clickUpgradeApp():
@@ -422,14 +426,16 @@ def clickCancelContactListCall():
 
 def clickNextPage():
     launchPano()
-    nextPage = 'com.letv.android.quicksearchbox:id/flush'
-    p = 0
-    while d(resourceId = nextPage).wait.gone():
-        p += 1
-        slideUp()
-        if p > 10:
-            break
-    d(resourceId = nextPage).click()
+    # nextPage = 'com.letv.android.quicksearchbox:id/flush'
+    # p = 0
+    # while d(resourceId = nextPage).wait.gone():
+    #     p += 1
+    #     slideUp()
+    #     if p > 10:
+    #         break
+    # d(resourceId = nextPage).click()
+    swipeToFindText(u'换一换')
+    d(text = u'换一换').click()
     time.sleep(2)
 
 def exposePanoSettingsFromSysSettings():
@@ -445,6 +451,7 @@ def exposePanoSettingsFromPersonalSettings():
 def exposePanoSettingsFromFeedback():
     actFromSysSettings()
     d(text = u'用户反馈').click()
+    time.sleep(2)
     d.press('back')
 
 def exposePanoSettingsFromCardEdit():
@@ -506,20 +513,22 @@ def exposeFeedbackFromHomepage():
 def clickSwitchOn():
     actFromSysSettings()
     d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_setting').click()
-    d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_switch').click()
+    # d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_switch').click()
+    d(text = u'院线热映').click()
     time.sleep(2)
     d.press('back')
 
 def clickSwitchOff():
     actFromSysSettings()
     d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_setting').click()
-    d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_switch').click()
+    # d(resourceId = 'com.letv.android.quicksearchbox:id/home_page_switch').click()
+    d(text = u'院线热映').click()
     time.sleep(2)
     d(resourceId = 'com.letv.android.quicksearchbox:id/back').click()
 
 def clickTogoLIVEinSERP():
     launchPano()
-    inputText('zhibo')
+    inputText(u'卫视')
     swipeToFindText(txt = u'直播中')
     slideUp()
     d(text = u'直播中').click()
@@ -585,12 +594,14 @@ def clickCancelInstallinSERP():
 def clickContinueInstallinSERP():
     clickInstallApp()
     d(text = u'继续').click()
+    time.sleep(5)
+    d(text = u'暂停').click()
 
 def clickHotWords():
     launchPano()
     searchbox = 'com.letv.android.quicksearchbox:id/search_src_text'
     d(resourceId = searchbox).click()
-    d.press('search')
+    d.press('enter')
 
 def exposeQVSERP():
     launchPano()
@@ -599,11 +610,13 @@ def exposeQVSERP():
 
 def clickBuyTicket():
     launchPano()
-    swipeToFindText(txt = u'院线热映')
-    swipeToFindText(txt = u'叫车')
-    while d(text = u'购票').wait.gone():
-        d(text = u'院线热映').right(resourceId = 'com.letv.android.quicksearchbox:id/flush').click()
-        time.sleep(2)
+    # swipeToFindText(txt = u'院线热映')
+    # swipeToFindText(txt = u'叫车')
+    inputText(yuanxianreying)
+    swipeToFindText(txt = u'购票')
+    # while d(text = u'购票').wait.gone():
+    #     d(text = u'院线热映').right(resourceId = 'com.letv.android.quicksearchbox:id/flush').click()
+    #     time.sleep(2)
     d(text = u'购票').click()
 
 def clickSwitchSort():

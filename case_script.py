@@ -492,7 +492,9 @@ def lockThenUnlock():
     time.sleep(3)
     d.press('power')
     time.sleep(3)
-    slideUp()
+    # slideUp()
+    d.swipe(w_m, h_m, w_m, 0, steps=10)
+    d.swipe(w_m, h_m, w_m, 0, steps=10)
 
 def exposeFeedbackFromScreenLock():
     actFromSysSettings()

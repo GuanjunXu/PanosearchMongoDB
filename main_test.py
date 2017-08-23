@@ -7,33 +7,29 @@ import pymongo
 import os
 import time
 import shutil
-# from uiautomator import device as d
-from uiautomator import Device
-
-d = Device('LP036778G6260000789')
 
 app_id = "PanoSearch"
-imei = '862131030039861'
+imei = '861579030145560'
 start_id = ''
 
 test_priority = ["P0", "P1", "P2"]
 test_version = ["2.5.0", "3.0.0", "3.0.2"]
 
-host = '10.185.29.20'
+host = '10.185.29.20' #'10.149.14.93' # '10.185.29.20' # 
 port = 27017
 
-gaps = 30
+gaps = 2
 single_case = None
 
 client = pymongo.MongoClient(host, port)
-db = client.preline_debug
+db = client.preline_debug #phone # preline_debug
 
 cwd = os.getcwd()
 result_path = cwd + '\\TestResult\\' + time.strftime("%Y-%m-%d_%H-%M-%S",time.localtime(time.time()))
 os.makedirs(result_path)
 
 def mainTest():
-    file_name = "case_tmp.xlsx"
+    file_name = "case_tmp_ver302.xlsx"
     bk = xlrd.open_workbook(file_name)
     case_sheet = bk.sheet_names()[0]
     sh = bk.sheet_by_name(case_sheet)
@@ -55,6 +51,7 @@ def mainTest():
             k_v['CaseNo'] = int(k_v['CaseNo'])
         except:
             pass
+        time.sleep(20)
         print str(i+1) + '\t' + str(k_v['CaseNo']) + '\t' + k_v['FuncName'] + '\t... Running ...\t',
         if k_v['EventType'] in ['run', 'ready', 'exit']:
             collection = db.app
@@ -63,11 +60,12 @@ def mainTest():
         case_script.exitPano()
         collection.remove({"app_id":app_id,"imei":imei}) # Clear history
         test_result = 'NoData'
+        t_r = 'NoData'
         try:
             exec('case_script.' + k_v['FuncName'] + '()') # Run test case
             time.sleep(gaps)
         except:
-            test_result = 'Err'
+            t_r = 'Err'
         find_par = eval(k_v['FindPar'])
         find_result = collection.find(find_par)
         broken_count = 0
@@ -76,7 +74,7 @@ def mainTest():
             time.sleep(gaps)
             broken_count += 1
             if broken_count > 10:
-                test_result = 'FindDBFailed'
+                t_r = 'FindDBFailed'
                 break
         time.sleep(gaps)
         find_result = collection.find(find_par)
@@ -99,8 +97,10 @@ def mainTest():
         for f_data in find_result_list:
             for sub_dic in f_data['props']:
                 data_props_list.append(sub_dic)
+        err_list = []
         for p in props:
             ppc = 0
+            test_result = 'PASS'
             for pp in data_props_list:
                 if type(p) != dict and p in pp.values():
                     p_index = data_props_list.index(pp)
@@ -114,15 +114,20 @@ def mainTest():
                         break
                 ppc += 1
                 if ppc == len(data_props_list):
-                    fail_reason = '\n\n-*-*-*-*- ' + str(p) + ' has error -*-*-*-*-'
+                    err_list.append(p)
+                    fail_reason = '\n\n-*-*-*-*- ' + str(err_list) + ' has error -*-*-*-*-'
                     test_result = 'FAIL'
                     ppc = 0
             if test_result == 'FAIL':
-                break
+                t_r = 'FAIL'
+                continue
         f = open(f_name_o, 'a')
         f.write(fail_reason)
         f.close()
-        os.rename(f_name_o, f_name_o[0:-4] + '_' + test_result + '.txt')
+        try:
+            os.rename(f_name_o, f_name_o[0:-4] + '_' + t_r + '.txt')
+        except:
+            os.rename(f_name_o, f_name_o[0:-4] + '_' + test_result + '.txt')
         print test_result
         if test_result != 'PASS':
             case_script.captureScreenAndPull(f_name_o, result_path)
@@ -171,11 +176,12 @@ def regressionTest():
         case_script.exitPano()
         collection.remove({"app_id":app_id,"imei":imei}) # Clear history
         test_result = 'NoData_regression'
+        t_r = 'NoData_regression'
         try:
             exec('case_script.' + k_v['FuncName'] + '()') # Run test case
             time.sleep(gaps)
         except:
-            test_result = 'Err_regression'
+            t_r = 'Err_regression'
         find_par = eval(k_v['FindPar'])
         find_result = collection.find(find_par)
         broken_count = 0
@@ -184,7 +190,7 @@ def regressionTest():
             time.sleep(gaps)
             broken_count += 1
             if broken_count > 10:
-                test_result = 'FindDBFailed_regression'
+                t_r = 'FindDBFailed_regression'
                 break
         time.sleep(gaps)
         find_result = collection.find(find_par)
@@ -207,6 +213,7 @@ def regressionTest():
         for f_data in find_result_list:
             for sub_dic in f_data['props']:
                 data_props_list.append(sub_dic)
+        err_list = []
         for p in props:
             ppc = 0
             for pp in data_props_list:
@@ -222,15 +229,20 @@ def regressionTest():
                         break
                 ppc += 1
                 if ppc == len(data_props_list):
-                    fail_reason = '\n\n-*-*-*-*- ' + str(p) + ' has error -*-*-*-*-'
+                    err_list.append(p)
+                    fail_reason = '\n\n-*-*-*-*- ' + str(err_list) + ' has error -*-*-*-*-'
                     test_result = 'FAIL_regression'
                     ppc = 0
             if test_result == 'FAIL_regression':
-                break
+                t_r = 'FAIL_regression'
+                continue
         f = open(f_name_o, 'a')
         f.write(fail_reason)
         f.close()
-        os.rename(f_name_o, f_name_o[0:-4] + '_' + test_result + '.txt')
+        try:
+            os.rename(f_name_o, f_name_o[0:-4] + '_' + t_r + '.txt')
+        except:
+            os.rename(f_name_o, f_name_o[0:-4] + '_' + test_result + '.txt')
         print test_result
         if test_result != 'PASS':
             case_script.captureScreenAndPull(f_name_o, result_path)
@@ -238,5 +250,9 @@ def regressionTest():
         
 mainTest()
 arrangeFiles(result_path, 'PASS')
-regressionTest()
+try:
+    ff = open('regression_test.txt','r')
+    regressionTest()
+except:
+    pass
 arrangeFiles(result_path, 'PASS')

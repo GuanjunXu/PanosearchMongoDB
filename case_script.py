@@ -9,7 +9,7 @@ from uiautomator import Device
 reload(sys)
 sys.setdefaultencoding('gbk')
 
-d = Device('LP036778G6260000789')
+d = Device('910019c9')
 
 yuanxianreying = u"反转人生"
 

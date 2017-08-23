@@ -21,6 +21,8 @@ port = 27017
 gaps = 2
 single_case = None
 
+case_not_run = 1 # Skip uiautomator scripts if not 1
+
 client = pymongo.MongoClient(host, port)
 db = client.preline_debug #phone # preline_debug
 
@@ -57,15 +59,16 @@ def mainTest():
             collection = db.app
         else:
             collection = db.event
-        case_script.exitPano()
-        collection.remove({"app_id":app_id,"imei":imei}) # Clear history
         test_result = 'NoData'
         t_r = 'NoData'
-        try:
-            exec('case_script.' + k_v['FuncName'] + '()') # Run test case
-            time.sleep(gaps)
-        except:
-            t_r = 'Err'
+        if case_not_run == 1:
+            case_script.exitPano()
+            collection.remove({"app_id":app_id,"imei":imei}) # Clear history
+            try:
+                exec('case_script.' + k_v['FuncName'] + '()') # Run test case
+                time.sleep(gaps)
+            except:
+                t_r = 'Err'
         find_par = eval(k_v['FindPar'])
         find_result = collection.find(find_par)
         broken_count = 0
@@ -130,7 +133,8 @@ def mainTest():
             os.rename(f_name_o, f_name_o[0:-4] + '_' + test_result + '.txt')
         print test_result
         if test_result != 'PASS':
-            case_script.captureScreenAndPull(f_name_o, result_path)
+            if case_not_run == 1:
+                case_script.captureScreenAndPull(f_name_o, result_path)
             f_reg = open('regression_test.txt', 'a')
             f_reg.write('%s,'%i)
             f_reg.close()
@@ -173,15 +177,16 @@ def regressionTest():
             collection = db.app
         else:
             collection = db.event
-        case_script.exitPano()
-        collection.remove({"app_id":app_id,"imei":imei}) # Clear history
         test_result = 'NoData_regression'
         t_r = 'NoData_regression'
-        try:
-            exec('case_script.' + k_v['FuncName'] + '()') # Run test case
-            time.sleep(gaps)
-        except:
-            t_r = 'Err_regression'
+        if case_not_run == 1:
+            case_script.exitPano()
+            collection.remove({"app_id":app_id,"imei":imei}) # Clear history
+            try:
+                exec('case_script.' + k_v['FuncName'] + '()') # Run test case
+                time.sleep(gaps)
+            except:
+                t_r = 'Err_regression'
         find_par = eval(k_v['FindPar'])
         find_result = collection.find(find_par)
         broken_count = 0
@@ -245,7 +250,8 @@ def regressionTest():
             os.rename(f_name_o, f_name_o[0:-4] + '_' + test_result + '.txt')
         print test_result
         if test_result != 'PASS':
-            case_script.captureScreenAndPull(f_name_o, result_path)
+            if case_not_run == 1:
+                case_script.captureScreenAndPull(f_name_o, result_path)
     print '===== Regression Test End ====='
         
 mainTest()

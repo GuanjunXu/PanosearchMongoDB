@@ -18,7 +18,7 @@ test_version = ["2.5.0", "3.0.0", "3.0.2"]
 host = '10.185.29.20' #'10.149.14.93' # '10.185.29.20' # 
 port = 27017
 
-gaps = 2
+gaps = 5
 single_case = None
 
 case_not_run = 1 # Skip uiautomator scripts if not 1
